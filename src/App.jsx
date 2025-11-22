@@ -3,15 +3,46 @@ import './App.css'
 
 function App() {
 
-  const arrayTablero = Array(9).fill(null)
+  const [tablero, setTablero] = useState(Array(9).fill(null))
 
   const [turno, setTurno] = useState("X")
 
-  const [tablero, setTablero] = useState(arrayTablero)
+  const [ganador, setGanador] = useState(null)
 
-  const [ganador, setGanador] = useState()
+  const checkGanador = (tableroCopia) => {
+    const size = 3
 
-  const [empate, setEmpate] = useState()
+    // Ganador por filas
+    for (let i = 0; i < size; i++) {
+      const fila = i * size
+      if (tableroCopia[fila] && tableroCopia[fila] === tableroCopia[fila + 1] && tableroCopia[fila] === tableroCopia[fila + 2]) {
+        return tableroCopia[fila]
+      }
+    }
+
+    // Ganador por columnas
+    for (let i = 0; i < size; i++) {
+      const columna = i
+      if (tableroCopia[columna] && tableroCopia[columna] === tableroCopia[columna + size] && tableroCopia[columna] === tableroCopia[columna + size * 2]) {
+        return tableroCopia[columna]
+      }
+    }
+
+    // Ganador por diagonales
+    if (tableroCopia[0] && tableroCopia[0] === tableroCopia[4] && tableroCopia[0] === tableroCopia[8]) {
+      return tableroCopia[0]
+    }
+
+    if (tableroCopia[2] && tableroCopia[2] === tableroCopia[4] && tableroCopia[2] === tableroCopia[6]) {
+      return tableroCopia[2]
+    }
+
+    return null;
+  }
+
+  const checkEmpate = (tableroCopia) => {
+    return tableroCopia.every(celda => celda)
+  }
 
   const handleClick = (index) => {
     if (tablero[index] || ganador) {
@@ -21,47 +52,22 @@ function App() {
     const nuevoTablero = [...tablero]
     nuevoTablero[index] = turno
 
-    const size = 3
-
-    // Ganador por filas
-    for (let i = 0; i < size; i++) {
-      const fila = i * size
-      if (nuevoTablero[fila] && nuevoTablero[fila] === nuevoTablero[fila + 1] && nuevoTablero[fila] === nuevoTablero[fila + 2]) {
-        setGanador(turno)
-      }
-    }
-
-    // Ganador por columnas
-    for (let i = 0; i < size; i++) {
-      const columna = i
-      if (nuevoTablero[columna] && nuevoTablero[columna] === nuevoTablero[columna + size] && nuevoTablero[columna] === nuevoTablero[columna + size * 2]) {
-        setGanador(turno)
-      }
-    }
-
-    // Ganador por diagonales
-    if (nuevoTablero[0] && nuevoTablero[0] === nuevoTablero[4] && nuevoTablero[0] === nuevoTablero[8]) {
-      setGanador(turno)
-    }
-
-    if (nuevoTablero[2] && nuevoTablero[2] === nuevoTablero[4] && nuevoTablero[2] === nuevoTablero[6]) {
-      setGanador(turno)
-    }
-
-    if (nuevoTablero.every(celda => celda)) {
-      setEmpate(true)
-    }
-
     setTablero(nuevoTablero)
     setTurno(turno === "X" ? "O" : "X")
-    //nuevoTablero[index].disabled = true
+
+    const resultado = checkGanador(nuevoTablero)
+
+    if (resultado) {
+      setGanador(resultado)
+    } else if (checkEmpate(nuevoTablero)) {
+      setGanador(false)
+    }
   }
 
   const handleReset = () => {
-    setTablero(arrayTablero)
+    setTablero(Array(9).fill(null))
     setTurno("X")
     setGanador(null)
-    setEmpate(false)
   }
 
   return (
@@ -84,7 +90,7 @@ function App() {
       <div>
         {ganador ? (
           <h2>El ganador es {ganador}</h2>
-        ) : empate ? (
+        ) : ganador === false ? (
           <h2>Empate</h2>
         ) : (
           <h2>Turno de {turno}</h2>
