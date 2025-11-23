@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
+  font-size: auto;
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -43,7 +43,7 @@
 }
 
 .celda:disabled {
-  background-color: #7f8c8d;
+  background-color: #383838;
   cursor: not-allowed;
   transform: scale(1);
 }
