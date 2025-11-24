@@ -15,7 +15,7 @@ function App() {
   })
 
   const [turno, setTurno] = useState(() => {
-    // Evitamos que lea en cada renderizado, solo cuando se inicia el estado
+    // Evitamos que lea en cada renderizado, solo cuando se inicia el estado ...
     const turnoGuardado = window.localStorage.getItem("turno")
     return turnoGuardado ? turnoGuardado : turnos.x
   })
